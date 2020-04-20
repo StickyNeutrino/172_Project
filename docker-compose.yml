@@ -1,0 +1,30 @@
+version: '3.8'
+
+services: 
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: make a username
+      MONGO_INITDB_ROOT_PASSWORD: make a password
+    volumes:
+      - type: bind
+        source: ./db
+        target: /data/db
+
+  twitter:
+    image: node
+    restart: always
+    user: node
+    working_dir: /home/node/app
+    environment:
+      NODE_ENV: production
+      TWITTER_CONSUMER_KEY: 
+      TWITTER_CONSUMER_SECRET: 
+      TWITTER_TOKEN_KEY: 
+      TWITTER_TOKEN_SECRET:
+    volumes:
+      - type: bind
+        source: ./twitter
+        target: /home/node/app
+    command: node index.js
