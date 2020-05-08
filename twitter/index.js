@@ -30,7 +30,7 @@ function collectTweets( db ) {
 MongoClient.connect( url, function( err, db) { 
   if ( err ) throw err;
   console.log( "Attached to MongoDB" );
-  collectTweets( db );
+  // collectTweets( db );
   db.close();
 });
 
