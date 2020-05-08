@@ -2,7 +2,7 @@ const Twitter = require('twitter-lite');
 const mongodb = require('mongodb');
 
 var MongoClient = mongodb.MongoClient;
-var url = "mongodb://mongo/tweets"
+var url = "mongodb://root:example@mongo"
 
 async function run() {
 
@@ -15,7 +15,14 @@ const app = new Twitter({
 
 function collectTweets( db ) {
   function tweetHandler( tweet ) {
-    console.log( tweet.text ) ;
+        var dbo = db.db("tweets");
+        var myobj = { tweeter: tweet };
+        dbo.collection("texts").insertOne(myobj, function(err, res) {
+          if (err) throw err;
+          console.log("1 document inserted");
+          // db.close();
+        });
+    // console.log( tweet ) ;
   }
 
   const params = {
@@ -30,7 +37,7 @@ MongoClient.connect( url, function( err, db) {
   if ( err ) throw err;
   console.log( "Attached to MongoDB" );
   collectTweets( db );
-  db.close();
+  // db.close();
 });
 
 }
