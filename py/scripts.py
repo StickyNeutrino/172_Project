@@ -1,8 +1,11 @@
-# import time
-# import pymongo
-from pymongo import MongoClient
-import requests 
+import requests
 from bs4 import BeautifulSoup
+import re
+import sys
+
+from pymongo import MongoClient
+client = MongoClient('mongodb://root:example@mongo')
+db = client.tweets
 
 def getTitle(url):
 
@@ -12,16 +15,18 @@ def getTitle(url):
 
     soup = BeautifulSoup(html_content, 'html.parser')
 
-    print(soup.title)
+    return soup.title
 
+while 1:
+    all = db.texts.find({})
+    for tweet in all:
+        urls = tweet['tweeter']['entities']['urls']
+        if 'pageTitle' in tweet:
+            continue
 
-getTitle('http://ilearn.ucr.edu')
+        if len(urls) > 0:
+            url = urls[0]['url']
+            title = getTitle(url)
 
-client = MongoClient('localhost', 27017)
-db = client['test']
-collection = db.tester
-result = collection.find({})
-# lister = list(result)
-print(list(result))
-# print(result)
-# pprint.pprint(posts.find_one())
+            db.texts.update_one({'_id': tweet['_id']},{'$set':{'pageTitle':title.string}})
+            print(title.string)

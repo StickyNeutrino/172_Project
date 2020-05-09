@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.5'
 
 services:
 
@@ -29,12 +29,17 @@ services:
     working_dir: /home/node/app
     environment:
       NODE_ENV: production
-      TWITTER_CONSUMER_KEY: 
-      TWITTER_CONSUMER_SECRET: 
-      TWITTER_TOKEN_KEY: 
+      TWITTER_CONSUMER_KEY:
+      TWITTER_CONSUMER_SECRET:
+      TWITTER_TOKEN_KEY:
       TWITTER_TOKEN_SECRET: 
     volumes:
       - type: bind
         source: ./twitter
         target: /home/node/app
     command: node index.js
+
+  title:
+    build: ./py
+    restart: always
+    command: python ./scripts.py
