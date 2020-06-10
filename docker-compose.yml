@@ -32,7 +32,7 @@ services:
       TWITTER_CONSUMER_KEY:
       TWITTER_CONSUMER_SECRET:
       TWITTER_TOKEN_KEY:
-      TWITTER_TOKEN_SECRET: 
+      TWITTER_TOKEN_SECRET:
     volumes:
       - type: bind
         source: ./twitter
@@ -43,3 +43,7 @@ services:
     build: ./py
     restart: always
     command: python ./scripts.py
+
+  lucene:
+    build: ./lucene
+    restart: always
