@@ -26,8 +26,26 @@ public class App
     public static void main( String[] args )
     {
 
-        File file = new File("tweets.json");
+        String json = new String(Files.readAllBytes(Paths.get('tweets.json')));
 
+        String pretty = pretty(json);
+
+        BufferedReader bufReader = new BufferedReader( new StringReader( pretty ))
+
+        String tweetLine = null;
+        while( (line=bufReader.readLine() != nul)){
+          Scanner tweetParts = new Scaner(tweetLine).useDelimiter();
+          String date = tweetParts.next();
+          String coords = tweetParts.next();
+          String user = tweetParts.next();
+          String text = tweetParts.next();
+          String hashtags = tweetParts.next();
+          String link = tweetParts.next();
+          String ptitle = tweetParts.next();
+
+          Tweet tweet - new Tweet(date, user, text, hashtags, url, title);
+          index(tweet);
+        }
     }
 }
 
