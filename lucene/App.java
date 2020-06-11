@@ -18,7 +18,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
-import org.json.JSONObject;
+//import org.json.JSONObject;
 
 //package TweetLucene;
 
@@ -41,7 +41,7 @@ class Tweet {
 }
 
 public class App {
-	public static void main(String[] args) throws IOException, org.json.simple.parser.ParseException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader b = null;
 		File file = new File("CS171_DATA");
 
@@ -54,26 +54,26 @@ public class App {
 		String line = null;
 		line = b.readLine();
 		while ((line != null)) {
-			System.out.println("HELLO");
-//			Scanner tweetParts = new Scanner(line).useDelimiter(
-//					"\\s*created_at:\\s*|\\s*location:\\s*|\\s*screen_name:\\s*|\\s*description:\\s*|\\s*hashtags:\\s*|\\s*url:\\s*|\\s*pageTitle:\\s*");
-//			if (tweetParts == null) {
-//				System.out.println("wat");
-//			}
+//			System.out.println("HELLO");
+			Scanner tweetParts = new Scanner(line).useDelimiter(
+					"\\s*created_at:\\s*|\\s*location:\\s*|\\s*screen_name:\\s*|\\s*description:\\s*|\\s*hashtags:\\s*|\\s*url:\\s*|\\s*pageTitle:\\s*");
+			if (tweetParts == null) {
+				System.out.println("wat");
+			}
 //			JSONObject obj = new JSONObject(line);
-			Scanner tweetParts = new Scanner(line);
-			tweetParts.useDelimiter("created_at:");
+//			Scanner tweetParts = new Scanner(line);
+//			tweetParts.useDelimiter("created_at:");
 //			System.out.println("created_at " + tweetParts.next());
 //			tweetParts.
 			System.out.println(tweetParts.next());
-//			String date = tweetParts.next();
-//			String coords = tweetParts.next();
-//			String user = tweetParts.next();
-//			String text = tweetParts.next();
-//			String hashtags = tweetParts.next();
-//			String url = tweetParts.next();
-//			String ptitle = tweetParts.next();
-//			Tweet tweet = new Tweet(date, coords, user, text, hashtags, url, ptitle);
+			String date = tweetParts.next();
+			String coords = tweetParts.next();
+			String user = tweetParts.next();
+			String text = tweetParts.next();
+			String hashtags = tweetParts.next();
+			String url = tweetParts.next();
+			String ptitle = tweetParts.next();
+			Tweet tweet = new Tweet(date, coords, user, text, hashtags, url, ptitle);
 			/**
 			 * Struct of tweet in JSON files created_at, location, screen_name, full_text,
 			 * hashtags, url, pageTitle
@@ -82,7 +82,7 @@ public class App {
 //					"Senior Cyrille Mae Naces will be enlisting in the Navy - Thank you for your service! https://t.co/0u6TJnnfOl @rowlandhs @RowlandSchools #RowlandRaiders #WeAreRUSD https://t.co/HOkkEtNojw",
 //					"", "https://t.co/yvGFGmAckf", "Rowland High School");
 //			System.out.println(date + coords + user + text + hashtags + url + ptitle);
-//			addTweet(tweet);
+			addTweet(tweet);
 //			addTweet(DUMMY_TWEET);
 //			System.out.println(DUMMY_TWEET.ptitle);
 //	       	tweetParts.close();
