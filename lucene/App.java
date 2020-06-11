@@ -1,25 +1,24 @@
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.ParseException;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.json.JSONObject;
-import org.json.simple.JSONArray;
-//import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 //package TweetLucene;
 
@@ -90,9 +89,10 @@ public class App {
 
 public static void addTweet(Tweet tweet) {
   IndexWriter index = null;
+//  File f = new File("")
   try {
     IndexWriterConfig indexConfig = new IndexWriterConfig(Version.LUCENE_34, new StandardAnalyzer( Version.LUCENE_35));
-    index = new IndexWriter(FSDirectory.open(File("index")), indexConfig);
+    index = new IndexWriter(FSDirectory.open(new File("index")), indexConfig);
 
 			Document doc = new Document();
     doc.add(new Field("date", tweet.date, Field.Store.YES, Field.Index.NO));
@@ -108,13 +108,13 @@ public static void addTweet(Tweet tweet) {
   }
 }
 
-public static String[] search(String queryStr, int k) {
+public static String[] search(String queryStr, int k) throws CorruptIndexException, IOException {
   IndexReader reader = IndexReader.open(FSDirectory.open(new File("index")));
   IndexSearcher searcher = new IndexSearcher(reader);
   QueryParser parser = new QueryParser(Version.LUCENE_34, "text", new StandardAnalyzer(Version.LUCENE_35));
 
   try {
-    StringTokenizer tokenizer = new StringTokenizer(queryStr, " ~`!@#$%^&*()_-+={[}]|:;'<>,./?\"\'\/\n\t\b\r\f");
+    StringTokenizer tokenizer = new StringTokenizer(queryStr," ~`!@#$%^&*()_-+={[}]|:;'<>,./?\"\'\\/\n\t\b\f\r");
 
     String parseable = "";
     while ( tokenizer.hasMoreElements() ) {
@@ -126,20 +126,21 @@ public static String[] search(String queryStr, int k) {
 
     TopDocs result = searcher.search(query, k);
 
-    String[] tweets = new String[result.scoreDocs.length]
+    String[] tweets = new String[result.scoreDocs.length];
     for (int i = 0; i < result.scoreDocs.length; i++) {
       String tweet = "@" + searcher.doc(result.scoreDocs[i].doc).getFieldable("user").stringValue();
       String date = searcher.doc(result.scoreDocs[i].doc).getFieldable("date").stringValue();
       tweet += ": " + searcher.doc(result.scoreDocs[i].doc).getFieldable("text").stringValue();
-      tweet += "<br/>" + date + " score: " + result.scoreDocs[i].score);
-      tweets[i] = tweets
+      tweet += "<br/>" + date + " score: " + result.scoreDocs[i].score;
+      tweets[i] = tweet;
     }
 
-    return tweets
+    return tweets;
 
   } catch (Exception e) {
-    e.printStackTrace()
+    e.printStackTrace();
   }
+return null;
 
 }
 }
