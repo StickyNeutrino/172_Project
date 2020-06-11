@@ -17,5 +17,6 @@ public class App
         MongoClient mongoClient = new MongoClient( "mongo" );
         MongoDatabase database = mongoClient.getDatabase("tweets");
         MongoCollection<Document> collection = database.getCollection("test");
+        System.out.println("hi");
     }
 }
