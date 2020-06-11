@@ -9,7 +9,6 @@
  </head>
  <body>
 
-
 <form action="Index.jsp" method = "GET">
                                 <input type="text" name = "query" placeholder="Search for tweet..." required>
                                 <input type="submit" name="submit" value="Search">
@@ -29,19 +28,8 @@ table.example3 td:first-child {width:20%;}
 </tr>
 <tr>
 <td width="20%">
+yuh
 
-
-<%String[] results;
-if (mystring == null) { 
-}
-else {
-	results = TweetLucene.search(mystring, 10);
-
-	for (int i = 0; i < results.length; i++) {
-		out.println(results[i] +"<br/><br/>");
-		}
-}
-%>
 </tr>
 </table>
 

@@ -1,5 +1,4 @@
-
-package cs172.project.TweetLucene;
+//package TweetLucene;
 
 import com.mongodb.MongoClient;
 
@@ -15,7 +14,6 @@ public class App
 {
     public static void main( String[] args )
     {
-
         MongoClient mongoClient = new MongoClient( "mongo" );
         MongoDatabase database = mongoClient.getDatabase("tweets");
         MongoCollection<Document> collection = database.getCollection("test");
