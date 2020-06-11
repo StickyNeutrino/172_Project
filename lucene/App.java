@@ -1,9 +1,12 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.Scanner;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -13,78 +16,98 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.json.JSONObject;
+import org.json.simple.JSONArray;
+//import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 //package TweetLucene;
 
-
 class Tweet {
-  public String date;
-  public String coords;
-  public String user;
-  public String text;
-  public String hashtags;
-  public String link;
-  public String ptitle;
+	public String date;
+	public String coords;
+	public String user;
+	public String text;
+	public String hashtags;
+	public String link;
+	public String ptitle;
 
-  Tweet(String d, String c, String u, String t, String h, String l, String p) {
-    this.date = d;
-    this.coords = c;
-    this.user = u;
-    this.text = t;
-    this.hashtags = h;
-    this.link = l;
-    this.ptitle = p;
-  }
+	Tweet(String d, String c, String u, String t, String h, String l, String p) {
+		this.date = d;
+		this.coords = c;
+		this.user = u;
+		this.text = t;
+		this.hashtags = h;
+		this.link = l;
+		this.ptitle = p;
+	}
 }
 
-public class App
-{
-    public static void main( String[] args ) throws IOException
-    {
+public class App {	  
+	public static void main(String[] args) throws IOException, org.json.simple.parser.ParseException {			
+		BufferedReader b = null;
+		File file = new File("CS171_DATA");
 
-        String json = new String(Files.readAllBytes(Paths.get("CS171_DATA")));
+		System.out.println("Reading: " + file + "leggo");
 
-        String pretty = Pretty.toPrettyFormat(json);
+		b = new BufferedReader(new FileReader(file));
 
-        BufferedReader bufReader = new BufferedReader( new StringReader( pretty ));
+//        BufferedReader bufReader = new BufferedReader( new StringReader( pretty ));
 
-        String tweetLine = null;
-        String line = bufReader.readLine();
-        while( (line != null)){
-          Scanner tweetParts = new Scanner(line).useDelimiter("\\s*Date:\\s*|\\s*Coords:\\s*|\\s*User:\\s*|\\s*Text:\\s*|\\s*Hashtags:\\s*|\\s*URL:\\s*|\\s*Title:\\s*");
-          String date = tweetParts.next();
-          String coords = tweetParts.next();
-          String user = tweetParts.next();
-          String text = tweetParts.next();
-          String hashtags = tweetParts.next();
-          String link = tweetParts.next();
-          String ptitle = tweetParts.next();
-          String url = tweetParts.next();
-          String title = tweetParts.next();
-          Tweet tweet = new Tweet(date, coords, user, text, hashtags, url, title);
-          addTweet(tweet);
-        }
-    }
+		String line = null;
+		line = b.readLine();
+		while ((line != null)) {
+			System.out.println("HELLO");
+//          System.out.println(line);
+			Scanner tweetParts = new Scanner(line).useDelimiter(
+					"\\s*created_at:\\s*|\\s*location:\\s*|\\s*screen_name:\\s*|\\s*description:\\s*|\\s*hashtags:\\s*|\\s*url:\\s*|\\s*pageTitle:\\s*");
+//			Scanner tweetParts = new Scanner(line);
+			if (tweetParts == null) {
+				System.out.println("wat");
+			}
+			JSONObject obj = new JSONObject(line);
+			System.out.println(tweetParts.hasNext());
+//			System.out.println(obj.getString("created_at"));
+//			System.out.println(tweetParts.next().toString());
+			String date = tweetParts.next();
+			String coords = tweetParts.next();
+			String user = tweetParts.next();
+			String text = tweetParts.next();
+			String hashtags = tweetParts.next();
+//          String link = tweetParts.next();
+			String url = tweetParts.next();
+			String ptitle = tweetParts.next();
+//          String title = tweetParts.next();
+			Tweet tweet = new Tweet(date, coords, user, text, hashtags, url, ptitle);
+			/**
+			 * It's just not doing anything@!
+			 */
+//			System.out.println(date + coords + user + text + hashtags + url + ptitle);
+			addTweet(tweet);
+//	       	tweetParts.close();
+		}
+	}
 
-public static void addTweet(Tweet tweet) {
-  File indexFile = new File("index");
-  IndexWriter index = null;
-  try {
-    IndexWriterConfig indexConfig = new IndexWriterConfig(Version.LUCENE_34, new StandardAnalyzer( Version.LUCENE_35));
-    index = new IndexWriter(FSDirectory.open(indexFile), indexConfig);
+	public static void addTweet(Tweet tweet) {
+		File indexFile = new File("index");
+		IndexWriter index = null;
+		try {
+			IndexWriterConfig indexConfig = new IndexWriterConfig(Version.LUCENE_34,
+					new StandardAnalyzer(Version.LUCENE_35));
+			index = new IndexWriter(FSDirectory.open(indexFile), indexConfig);
 
-    Document doc = new Document();
+			Document doc = new Document();
 
-    doc.add(new Field("date", tweet.date, Field.Store.YES, Field.Index.NO));
-    doc.add(new Field("user", tweet.user, Field.Store.YES, Field.Index.NO));
-    doc.add(new Field("coords", tweet.coords, Field.Store.YES, Field.Index.NO));
-    doc.add(new Field("text", tweet.text, Field.Store.YES, Field.Index.ANALYZED));
-    doc.add(new Field("hashtags", tweet.hashtags, Field.Store.YES, Field.Index.ANALYZED));
-    doc.add(new Field("link", tweet.link, Field.Store.YES, Field.Index.NO));
-    doc.add(new Field("ptitle", tweet.ptitle, Field.Store.YES, Field.Index.ANALYZED));
-    index.addDocument(doc);
-  } catch (Exception e) {
-    e.printStackTrace();
-  }
-}
+			doc.add(new Field("date", tweet.date, Field.Store.YES, Field.Index.NO));
+			doc.add(new Field("user", tweet.user, Field.Store.YES, Field.Index.NO));
+			doc.add(new Field("coords", tweet.coords, Field.Store.YES, Field.Index.NO));
+			doc.add(new Field("text", tweet.text, Field.Store.YES, Field.Index.ANALYZED));
+			doc.add(new Field("hashtags", tweet.hashtags, Field.Store.YES, Field.Index.ANALYZED));
+			doc.add(new Field("link", tweet.link, Field.Store.YES, Field.Index.NO));
+			doc.add(new Field("ptitle", tweet.ptitle, Field.Store.YES, Field.Index.ANALYZED));
+			index.addDocument(doc);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
