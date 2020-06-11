@@ -20,4 +20,6 @@ Then lucene is used to find the documents most similar to user queries.
 
 ### Instructions for deployment
 
+### WebApp
+
 ### Screenshots
