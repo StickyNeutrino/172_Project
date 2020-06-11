@@ -26,6 +26,29 @@ public class App
     public static void main( String[] args )
     {
 
-        System.out.println("hi");
+        File file = new File("tweets.json");
+
     }
+}
+
+public static void addTweet(Tweet tweet) {
+  File indexFile = new File("index");
+  IndexWriter index = null;
+  try {
+    IndexWriterConfig indexConfig = new IndexWriterConfig(Version.LUCENE_34, new StandardAnalyzer( Version.LUCENE_35))
+    index = new IndexWriter(FSDirectory.open(indexFile), indexConfig)
+
+    Document doc = new Document();
+
+    doc.add(new Field("date", tweet.date, Field.Store.YES, Field.Index.));
+    doc.add(new Field("user", tweet.user, Field.Store.YES, Field.Index.));
+    doc.add(new Field("coords", tweet.coords, Field.Store.YES, Field.Index.));
+    doc.add(new Field("text", tweet.text, Field.Store.YES, Field.Index.));
+    doc.add(new Field("hashtags", tweet.hashtags, Field.Store.YES, Field.Index.));
+    doc.add(new Field("link", tweet.link, Field.Store.YES, Field.Index.));
+    doc.add(new Field("ptitle", tweet.ptitle, Field.Store.YES, Field.Index.));
+    writer.addDocument(doc);
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
 }
