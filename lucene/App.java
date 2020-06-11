@@ -1,3 +1,19 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
+
 //package TweetLucene;
 
 
@@ -23,18 +39,19 @@ class Tweet {
 
 public class App
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws IOException
     {
 
-        String json = new String(Files.readAllBytes(Paths.get('tweets.json')));
+        String json = new String(Files.readAllBytes(Paths.get("CS171_DATA")));
 
-        String pretty = pretty(json);
+        String pretty = Pretty.toPrettyFormat(json);
 
-        BufferedReader bufReader = new BufferedReader( new StringReader( pretty ))
+        BufferedReader bufReader = new BufferedReader( new StringReader( pretty ));
 
         String tweetLine = null;
-        while( (line=bufReader.readLine() != nul)){
-          Scanner tweetParts = new Scaner(tweetLine).useDelimiter();
+        String line = bufReader.readLine();
+        while( (line != null)){
+          Scanner tweetParts = new Scanner(line).useDelimiter("\\s*Date:\\s*|\\s*Coords:\\s*|\\s*User:\\s*|\\s*Text:\\s*|\\s*Hashtags:\\s*|\\s*URL:\\s*|\\s*Title:\\s*");
           String date = tweetParts.next();
           String coords = tweetParts.next();
           String user = tweetParts.next();
@@ -42,31 +59,32 @@ public class App
           String hashtags = tweetParts.next();
           String link = tweetParts.next();
           String ptitle = tweetParts.next();
-
-          Tweet tweet - new Tweet(date, user, text, hashtags, url, title);
-          index(tweet);
+          String url = tweetParts.next();
+          String title = tweetParts.next();
+          Tweet tweet = new Tweet(date, coords, user, text, hashtags, url, title);
+          addTweet(tweet);
         }
     }
-}
 
 public static void addTweet(Tweet tweet) {
   File indexFile = new File("index");
   IndexWriter index = null;
   try {
-    IndexWriterConfig indexConfig = new IndexWriterConfig(Version.LUCENE_34, new StandardAnalyzer( Version.LUCENE_35))
-    index = new IndexWriter(FSDirectory.open(indexFile), indexConfig)
+    IndexWriterConfig indexConfig = new IndexWriterConfig(Version.LUCENE_34, new StandardAnalyzer( Version.LUCENE_35));
+    index = new IndexWriter(FSDirectory.open(indexFile), indexConfig);
 
     Document doc = new Document();
 
-    doc.add(new Field("date", tweet.date, Field.Store.YES, Field.Index.));
-    doc.add(new Field("user", tweet.user, Field.Store.YES, Field.Index.));
-    doc.add(new Field("coords", tweet.coords, Field.Store.YES, Field.Index.));
-    doc.add(new Field("text", tweet.text, Field.Store.YES, Field.Index.));
-    doc.add(new Field("hashtags", tweet.hashtags, Field.Store.YES, Field.Index.));
-    doc.add(new Field("link", tweet.link, Field.Store.YES, Field.Index.));
-    doc.add(new Field("ptitle", tweet.ptitle, Field.Store.YES, Field.Index.));
-    writer.addDocument(doc);
+    doc.add(new Field("date", tweet.date, Field.Store.YES, Field.Index.NO));
+    doc.add(new Field("user", tweet.user, Field.Store.YES, Field.Index.NO));
+    doc.add(new Field("coords", tweet.coords, Field.Store.YES, Field.Index.NO));
+    doc.add(new Field("text", tweet.text, Field.Store.YES, Field.Index.ANALYZED));
+    doc.add(new Field("hashtags", tweet.hashtags, Field.Store.YES, Field.Index.ANALYZED));
+    doc.add(new Field("link", tweet.link, Field.Store.YES, Field.Index.NO));
+    doc.add(new Field("ptitle", tweet.ptitle, Field.Store.YES, Field.Index.ANALYZED));
+    index.addDocument(doc);
   } catch (Exception e) {
     e.printStackTrace();
   }
+}
 }
