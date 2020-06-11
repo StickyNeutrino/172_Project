@@ -1,3 +1,15 @@
 # 172_Project
 
-Dependencies: BeautifulSoup, pymongo
+## Overview
+
+### Architecure
+
+### Index Structure
+
+### Search Algorithm
+
+### Limitations
+
+### Instructions for deployment
+
+### Screenshots
