@@ -67,11 +67,10 @@ public class App
     }
 
 public static void addTweet(Tweet tweet) {
-  File indexFile = new File("index");
   IndexWriter index = null;
   try {
     IndexWriterConfig indexConfig = new IndexWriterConfig(Version.LUCENE_34, new StandardAnalyzer( Version.LUCENE_35));
-    index = new IndexWriter(FSDirectory.open(indexFile), indexConfig);
+    index = new IndexWriter(FSDirectory.open(File("index")), indexConfig);
 
     Document doc = new Document();
 
@@ -86,5 +85,40 @@ public static void addTweet(Tweet tweet) {
   } catch (Exception e) {
     e.printStackTrace();
   }
+}
+
+public static String[] search(String queryStr, int k) {
+  IndexReader reader = IndexReader.open(FSDirectory.open(new File("index")));
+  IndexSearcher searcher = new IndexSearcher(reader);
+  QueryParser parser = new QueryParser(Version.LUCENE_34, "text", new StandardAnalyzer(Version.LUCENE_35));
+
+  try {
+    StringTokenizer tokenizer = new StringTokenizer(queryStr, " ~`!@#$%^&*()_-+={[}]|:;'<>,./?\"\'\/\n\t\b\r\f");
+
+    String parseable = "";
+    while ( tokenizer.hasMoreElements() ) {
+      String token = tokenizer.nextToken();
+      parseable += "text:" + token + "^1" + "hashtags:" + token + "^1.5" + "ptitle:" + token + "^2.0";
+    }
+
+    Query query = parser.parse(parseable);
+
+    TopDocs result = searcher.search(query, k);
+
+    String[] tweets = new String[result.scoreDocs.length]
+    for (int i = 0; i < result.scoreDocs.length; i++) {
+      String tweet = "@" + searcher.doc(result.scoreDocs[i].doc).getFieldable("user").stringValue();
+      String date = searcher.doc(result.scoreDocs[i].doc).getFieldable("date").stringValue();
+      tweet += ": " + searcher.doc(result.scoreDocs[i].doc).getFieldable("text").stringValue();
+      tweet += "<br/>" + date + " score: " + result.scoreDocs[i].score);
+      tweets[i] = tweets
+    }
+
+    return tweets
+
+  } catch (Exception e) {
+    e.printStackTrace()
+  }
+
 }
 }
