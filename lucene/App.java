@@ -89,7 +89,7 @@ public class App {
 		}
 	}
 
-	public static void addTweet(Tweet tweet) {
+	public static void addTweet(Tweet tweet) throws CorruptIndexException, IOException {
 		IndexWriter index = null;
 //  File f = new File("")
 		try {
@@ -97,7 +97,6 @@ public class App {
 					new StandardAnalyzer(Version.LUCENE_35));
 			index = new IndexWriter(FSDirectory.open(new File("index")), indexConfig);
 			Document doc = new Document();
-<<<<<<< HEAD
     doc.add(new Field("date", tweet.date, Field.Store.YES, Field.Index.NO));
     doc.add(new Field("user", tweet.user, Field.Store.YES, Field.Index.NO));
     doc.add(new Field("coords", tweet.coords, Field.Store.YES, Field.Index.NO));
@@ -114,20 +113,6 @@ public class App {
     }
   }
 }
-=======
-			doc.add(new Field("date", tweet.date, Field.Store.YES, Field.Index.NO));
-			doc.add(new Field("user", tweet.user, Field.Store.YES, Field.Index.NO));
-			doc.add(new Field("coords", tweet.coords, Field.Store.YES, Field.Index.NO));
-			doc.add(new Field("text", tweet.text, Field.Store.YES, Field.Index.ANALYZED));
-			doc.add(new Field("hashtags", tweet.hashtags, Field.Store.YES, Field.Index.ANALYZED));
-			doc.add(new Field("link", tweet.link, Field.Store.YES, Field.Index.NO));
-			doc.add(new Field("ptitle", tweet.ptitle, Field.Store.YES, Field.Index.ANALYZED));
-			index.addDocument(doc);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
->>>>>>> 348b787c2295b4c08697240db88728cfb38e8f4d
 
 	public static String[] search(String queryStr, int k) throws CorruptIndexException, IOException {
 		IndexReader reader = IndexReader.open(FSDirectory.open(new File("index")));
