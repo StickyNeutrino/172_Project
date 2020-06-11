@@ -42,8 +42,8 @@ class Tweet {
 	}
 }
 
-public class App {	  
-	public static void main(String[] args) throws IOException, org.json.simple.parser.ParseException {			
+public class App {
+	public static void main(String[] args) throws IOException, org.json.simple.parser.ParseException {
 		BufferedReader b = null;
 		File file = new File("CS171_DATA");
 
@@ -105,6 +105,10 @@ public static void addTweet(Tweet tweet) {
     index.addDocument(doc);
   } catch (Exception e) {
     e.printStackTrace();
+  } finally {
+    if ( index != null ){
+      index.close();
+    }
   }
 }
 
