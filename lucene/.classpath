@@ -13,5 +13,9 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/danie/Desktop/172_Project/lucene/WebContent/WEB-INF/lib/lucene-core-3.6.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/danie/Desktop/172_Project/lucene/WebContent/WEB-INF/lib/lucene-core-3.6.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/danie/Desktop/172_Project/lucene/WebContent/WEB-INF/lib/lucene-test-framework-3.6.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/danie/Desktop/172_Project/lucene/WebContent/WEB-INF/lib/lucene-test-framework-3.6.2-javadoc.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
